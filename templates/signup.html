@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Join PlayIndia</title>
+</head>
+<body>
+    <h1>Sign Up</h1>
+    <form method="POST">
+        <label>Name:</label><br>
+        <input type="text" name="name" required><br><br>
+        
+        <label>Email:</label><br>
+        <input type="email" name="email" required><br><br>
+        
+        <label>City/Pincode:</label><br>
+        <input type="text" name="city" required><br><br>
+        
+        <button type="submit">Join</button>
+    </form>
+    <br>
+    <a href="/">Back to Home</a>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Join PlayIndia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        #map { height: 300px; width: 100%; border-radius: 8px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sign Up for PlayIndia</h1>
+        <p>Click "Allow" when the browser asks for your location to find nearby players!</p>
+        
+        <div id="map"></div>
+
+        <form method="POST">
+            <input type="text" name="name" placeholder="Full Name" required>
+            <input type="email" name="email" placeholder="Email Address" required>
+            <input type="password" name="password" placeholder="Create Password" required>
+            
+            <input type="hidden" name="lat" id="lat">
+            <input type="hidden" name="lng" id="lng">
+            
+            <button type="submit">Join Community</button>
+        </form>
+        <p>Already have an account? <a href="/login">Login here</a></p>
+    </div>
+
+    <script>
+        // Initialize the map (centered on India default)
+        var map = L.map('map').setView([20.5937, 78.9629], 5);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        var marker;
+
+        // Try to get user's exact location
+        map.locate({setView: true, maxZoom: 14});
+
+        // When location is found, drop a pin and save coordinates
+        map.on('locationfound', function(e) {
+            marker = L.marker(e.latlng).addTo(map).bindPopup("You are here!").openPopup();
+            document.getElementById('lat').value = e.latlng.lat;
+            document.getElementById('lng').value = e.latlng.lng;
+        });
+
+        // If they deny location access, let them click the map to set location
+        map.on('click', function(e) {
+            if (marker) { map.removeLayer(marker); }
+            marker = L.marker(e.latlng).addTo(map);
+            document.getElementById('lat').value = e.latlng.lat;
+            document.getElementById('lng').value = e.latlng.lng;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PlayIndia - Find Your Team</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">🏏 PlayIndia</div>
+        <div class="nav-links">
+            {% if session.get('user_id') %}
+                <span class="welcome-text">Hi, {{ session.get('name') }}!</span>
+                <a href="/add_activity" class="btn btn-outline">Post Activity</a>
+                <a href="/logout" class="btn btn-text">Logout</a>
+            {% else %}
+                <a href="/login" class="btn btn-text">Login</a>
+                <a href="/signup" class="btn btn-primary">Sign Up</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <header class="hero">śś
+        <div class="hero-content">
+            <h1>Find your squad. Play your game.</h1>
+            <p>Connect with people nearby for sports, games, and local activities.</p>
+            {% if not session.get('user_id') %}
+                <a href="/signup" class="btn btn-large">Get Started Now</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="container">
+        <h2 class="section-title">Happening Nearby</h2>
+        
+        <div class="activity-grid">
+            {% for activity in activities %}
+                <div class="activity-card">
+                    <div class="card-icon">
+                        <i class="fas fa-running"></i>
+                    </div>
+                    <h3>{{ activity['sport'] }}</h3>
+                    <p class="location"><i class="fas fa-map-marker-alt"></i> {{ activity['location'] }}</p>
+                    <p class="players"><i class="fas fa-users"></i> {{ activity['players_needed'] }} players needed</p>
+                    <button class="btn btn-join">Join Game</button>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <p>No activities posted yet. Be the first to start a game!</p>
+                    <a href="/add_activity" class="btn btn-primary">Post an Activity</a>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+</body>
+</html>
